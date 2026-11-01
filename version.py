@@ -186,13 +186,14 @@ releaseinfo = {
     "9.1.04": "more tweaking of thesplices and self-splices",
     "9.1.05": "issue with skipped layers in accessory mode",
     "10.0.0": "Create new packages and CI/CD system",
+    "10.2.3": "PrusaSlicer 2.8/2.9 config parsing fix and portable Windows ZIP release",
     '--- RELEASE INFORMATION': 'END'
 }
 
 # general version info
 MajorVersion = 10
 MinorVersion = 2
-Build = 2
+Build = 3
 
 Version = "{}.{:02}.{:02}".format(MajorVersion, MinorVersion, Build)
 

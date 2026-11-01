@@ -13,10 +13,12 @@ or with pytest:
 import json
 import os
 import sys
+import tempfile
+import zipfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from lint_gcode import lint_gcode, lint_p3_metafile
+from lint_gcode import lint_file, lint_gcode, lint_p3_metafile
 
 # Two splices, one algorithm, no header pings (connected mode).
 GOOD_P2_HEADER = """\
@@ -103,6 +105,21 @@ def test_p3_metafile_ping_count_mismatch():
                        "pingCount": 5,
                        "pings": [{"length": 1.0}]})
     assert "P2PP-LINT-103" in _codes(lint_p3_metafile(meta))
+
+
+def test_mcfx_zip_archive_is_clean():
+    meta = json.dumps({"filaments": [{"filamentId": 1}],
+                       "pingCount": 2,
+                       "pings": [{"length": 1.0}, {"length": 2.0}]})
+    fd, path = tempfile.mkstemp(suffix=".mcfx")
+    os.close(fd)
+    try:
+        with zipfile.ZipFile(path, "w") as archive:
+            archive.writestr("meta.json", meta)
+            archive.writestr("print.gcode", "G1 X0 Y0\n")
+        assert lint_file(path) == []
+    finally:
+        os.remove(path)
 
 
 if __name__ == "__main__":

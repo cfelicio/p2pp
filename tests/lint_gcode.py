@@ -17,6 +17,7 @@ Exits 0 when clean, 1 when any finding is reported.
 import json
 import re
 import sys
+import zipfile
 
 # hexify_short -> "D" + 4 lowercase hex digits; hexify_float / hexify_long -> 8.
 HEX_SHORT = re.compile(r"^D[0-9a-f]{4}$")
@@ -187,6 +188,21 @@ def lint_p3_metafile(text):
 
 
 def lint_file(path):
+    # Palette 3 output is a ZIP-based MCFX archive, not a plain JSON file.
+    # Validate the archive's meta.json (and confirm print.gcode is present).
+    if zipfile.is_zipfile(path):
+        with zipfile.ZipFile(path) as archive:
+            names = archive.namelist()
+            findings = []
+            if "meta.json" not in names:
+                findings.append(_finding("100", "MCFX archive has no meta.json"))
+            else:
+                findings.extend(lint_p3_metafile(
+                    archive.read("meta.json").decode("utf-8", errors="replace")))
+            if "print.gcode" not in names:
+                findings.append(_finding("104", "MCFX archive has no print.gcode"))
+            return findings
+
     with open(path, "r", encoding="utf-8", errors="replace") as handle:
         text = handle.read()
     if path.endswith(".json") or path.endswith(".mcfx"):

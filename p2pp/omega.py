@@ -352,7 +352,10 @@ def header_generate_omega_palette2(job_name):
 # SECTION OMEGA - P3
 
 def reduce_filament_types():
-    for i in range(v.colors):
+    # Guard against a short filament-type list. PrusaSlicer can emit fewer
+    # filament entries than the configured Palette input count (for example,
+    # four filaments with a Palette 3 Pro profile).
+    for i in range(min(v.colors, len(v.filament_type))):
         if v.palette_inputs_used[i] and not v.filament_type[i] in v.spliced_filament_types:
             v.spliced_filament_types.append(v.filament_type[i])
     v.spliced_filament_types.sort()

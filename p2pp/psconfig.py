@@ -115,6 +115,13 @@ def get_bedshape(line):
 
 # SECTION PS Parameters
 
+
+def split_ps_list(value):
+    """Split PrusaSlicer 2.8+ comma-separated lists, while retaining
+    compatibility with older semicolon-separated output."""
+    return [field.strip().strip('"') for field in re.split(r"[;,]", value) if field.strip()]
+
+
 def parse_config_parameters():
 
     # TODO - get this information from the environment parameters
@@ -379,7 +386,7 @@ def parse_config_parameters():
             gcode_line = gcode_line[parameter_start + 1:].strip()
             parameter_start = gcode_line.find("#")
             if parameter_start != -1:
-                filament_colour = gcode_line.split(";")
+                filament_colour = split_ps_list(gcode_line)
             v.filament_count = len(filament_colour)
             for i in range(v.filament_count):
                 v.filament_color_code[i] = filament_colour[i][1:]
@@ -396,12 +403,13 @@ def parse_config_parameters():
         if gcode_line.startswith("; filament_type"):
             parameter_start = gcode_line.find("=")
             if parameter_start != -1:
-                filament_string = gcode_line[parameter_start + 1:].strip(" ").split(";")
+                filament_string = split_ps_list(gcode_line[parameter_start + 1:].strip(" "))
                 for i in range(len(filament_string)):
                     if v.filament_type[i] != "":
                         filament_string[i] = v.filament_type[i]
-                v.filament_type = filament_string
-                v.used_filament_types = list(set(filament_string))
+                if filament_string:
+                    v.filament_type = filament_string
+                    v.used_filament_types = list(set(filament_string))
 
             continue
 

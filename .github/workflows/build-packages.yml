@@ -123,6 +123,29 @@ jobs:
       run: |
         python setup.py bdist_msi
 
+    - name: Create Portable Windows ZIP
+      run: |
+        $tag = "${{ github.ref_name }}"
+        $version = python -c "import version; print(version.Version)"
+        if ($tag -match '^v') {
+          $label = $tag
+        } else {
+          $label = "v$version"
+        }
+
+        $buildDir = Get-ChildItem build -Directory |
+          Where-Object { $_.Name -like 'exe.win-*' } |
+          Select-Object -First 1
+        if (-not $buildDir) {
+          throw "No cx_Freeze build/exe.win-* directory found"
+        }
+
+        New-Item -ItemType Directory -Force -Path dist | Out-Null
+        $zipPath = "dist/P2PP-$label-windows-portable.zip"
+        Compress-Archive -Path (Join-Path $buildDir.FullName '*') -DestinationPath $zipPath -Force
+        Write-Output "Created $zipPath from $($buildDir.FullName)"
+      shell: pwsh
+
     - name: Create Self-Signed Certificate (Development)
       if: ${{ !inputs.use_production_signing }}
       run: |
@@ -166,7 +189,9 @@ jobs:
       if: inputs.upload_to_release && startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
       with:
-        files: dist/*.msi
+        files: |
+          dist/*.msi
+          dist/*portable.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

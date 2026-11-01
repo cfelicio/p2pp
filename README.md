@@ -1,18 +1,23 @@
 # p2pp - **Palette2 Post Processing tool for PrusaSlicer/Slic3r PE**
 
+> **Fork note:** This is Carlos Felicio's fork of
+> [vhspace/p2pp](https://github.com/vhspace/p2pp). It fixes the
+> PrusaSlicer 2.8/2.9 comma-separated config-comment parsing bug and adds a
+> portable Windows build to the GitHub Actions releases.
+
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ballew@sublinear.net&lc=EU&item_name=Donation+to+P2PP+Developer&no_note=0&cn=&currency_code=USD&bn=PP-DonationsBF:btn_donateCC_LG.gif:NonHosted)
-[![Release](https://img.shields.io/github/v/release/vhspace/p2pp)](https://github.com/vhspace/p2pp/releases)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/vhspace/p2pp/pulls)
-[![Build](https://img.shields.io/github/actions/workflow/status/vhspace/p2pp/build.yml?branch=master&label=build)](https://github.com/vhspace/p2pp/actions/workflows/build.yml)
+[![Release](https://img.shields.io/github/v/release/cfelicio/p2pp)](https://github.com/cfelicio/p2pp/releases)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/cfelicio/p2pp/pulls)
+[![Build](https://img.shields.io/github/actions/workflow/status/cfelicio/p2pp/build.yml?branch=master&label=build)](https://github.com/cfelicio/p2pp/actions/workflows/build.yml)
 [![Docs](https://img.shields.io/badge/docs-online-blue)](https://vhspace.github.io/p2pp/)
-[![Stars](https://img.shields.io/github/stars/vhspace/p2pp?style=social)](https://github.com/vhspace/p2pp/stargazers)
+[![Stars](https://img.shields.io/github/stars/cfelicio/p2pp?style=social)](https://github.com/cfelicio/p2pp/stargazers)
 [![Discord](https://img.shields.io/badge/Discord-Join%20chat-5865F2?logo=discord&logoColor=white)](https://discord.gg/gg6DeK9Qfs)
 
-[![Palette 2](https://img.shields.io/badge/Palette%202-supported-blueviolet)](https://github.com/vhspace/p2pp)
-[![Palette 3](https://img.shields.io/badge/Palette%203-supported-blueviolet)](https://github.com/vhspace/p2pp)
-[![Multi-color](https://img.shields.io/badge/multi--color-printing-ffcc00)](https://github.com/vhspace/p2pp)
-[![Multi-material](https://img.shields.io/badge/multi--material-post--processing-ffcc00)](https://github.com/vhspace/p2pp)
-[![PrusaSlicer](https://img.shields.io/badge/PrusaSlicer-supported-orange)](https://github.com/vhspace/p2pp)
+[![Palette 2](https://img.shields.io/badge/Palette%202-supported-blueviolet)](https://github.com/cfelicio/p2pp)
+[![Palette 3](https://img.shields.io/badge/Palette%203-supported-blueviolet)](https://github.com/cfelicio/p2pp)
+[![Multi-color](https://img.shields.io/badge/multi--color-printing-ffcc00)](https://github.com/cfelicio/p2pp)
+[![Multi-material](https://img.shields.io/badge/multi--material-post--processing-ffcc00)](https://github.com/cfelicio/p2pp)
+[![PrusaSlicer](https://img.shields.io/badge/PrusaSlicer-supported-orange)](https://github.com/cfelicio/p2pp)
 
 ## Getting started
 
@@ -20,6 +25,24 @@ Have a look at the [P2PP Docs](https://vhspace.github.io/p2pp/) to get you start
 
 Pre-built slicer profiles for PrusaSlicer and OrcaSlicer (Palette 2 & 3) are available
 in [`profiles/`](profiles/README.md).
+
+## Portable Windows build
+
+Every Windows release includes a portable ZIP as well as the MSI installer:
+
+- `P2PP-v10.2.3-windows-portable.zip` — extract it and run `P2PP.exe`.
+- The portable build bundles Python, PyQt, and the application files; it does not
+  install a system Python or change a system Qt installation.
+- Use the MSI if you want Start Menu integration and normal uninstall support.
+- Use the portable ZIP if you want to test or run P2PP alongside an existing
+  PrusaSlicer/Python setup without mixing dependencies.
+
+## PrusaSlicer 2.8/2.9 compatibility
+
+This fork accepts both the older semicolon-separated PrusaSlicer config comments
+and the comma-separated lists emitted by PrusaSlicer 2.8 and 2.9. The fix was
+validated against G-code produced by PrusaSlicer 2.9.6 and is covered by
+`tests/test_psconfig_29.py`.
 
 
 ## Contributing
