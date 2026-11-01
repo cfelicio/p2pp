@@ -125,9 +125,55 @@ jobs:
     - name: Generate Qt resource module
       run: pyrcc5 -o image_rc.py image.qrc
 
-    - name: Build Windows Package
+    - name: Build Windows executable
       run: |
-        python setup.py bdist_msi
+        python setup.py build_exe
+
+    - name: Bundle VC++ runtime DLLs
+      shell: pwsh
+      run: |
+        $buildDir = Get-ChildItem build -Directory |
+          Where-Object { $_.Name -like 'exe.win-*' } |
+          Select-Object -First 1
+        if (-not $buildDir) {
+          throw "No cx_Freeze build/exe.win-* directory found"
+        }
+
+        $pythonRoot = python -c "import sys; print(sys.base_prefix)"
+        $dllNames = @('vcruntime140.dll', 'vcruntime140_1.dll', 'msvcp140.dll', 'msvcp140_1.dll')
+        foreach ($name in $dllNames) {
+          $source = $null
+          $candidates = @(
+            (Join-Path $pythonRoot $name),
+            (Join-Path "$env:WINDIR\System32" $name)
+          )
+          foreach ($candidate in $candidates) {
+            if (Test-Path $candidate) {
+              $source = $candidate
+              break
+            }
+          }
+
+          if (-not $source) {
+            $vs = Get-ChildItem "$env:ProgramFiles\Microsoft Visual Studio" -Recurse -Filter $name -ErrorAction SilentlyContinue |
+              Select-Object -First 1
+            if ($vs) {
+              $source = $vs.FullName
+            }
+          }
+
+          if (-not $source) {
+            throw "VC runtime DLL not found: $name"
+          }
+
+          Copy-Item -LiteralPath $source -Destination (Join-Path $buildDir 'lib') -Force
+          Copy-Item -LiteralPath $source -Destination (Join-Path $buildDir 'lib\PyQt5\Qt5\bin') -Force
+          Write-Output "Bundled $name from $source"
+        }
+
+    - name: Build MSI
+      run: |
+        python setup.py bdist_msi --skip-build
 
     - name: Create Portable Windows ZIP
       run: |

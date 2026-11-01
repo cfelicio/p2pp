@@ -121,32 +121,6 @@ if sys.platform == "win32":
     from cx_Freeze import setup, Executable
 
     includefiles = ["p2pp.ui", 'p2ppconf.ui', "icons/icon.ico", "SendError.ui", "p3browser.ui"]
-
-    # Qt5Core.dll and the PyQt5 extensions require the Microsoft Visual C++
-    # runtime. Without it, a portable GUI build fails while importing QtCore.
-    runtime_names = [
-        "vcruntime140.dll",
-        "vcruntime140_1.dll",
-        "msvcp140.dll",
-        "msvcp140_1.dll",
-    ]
-    runtime_roots = [
-        os.path.dirname(sys.executable),
-        os.path.join(os.environ.get("WINDIR", r"C:\Windows"), "System32"),
-    ]
-    runtime_files = []
-    for name in runtime_names:
-        for root in runtime_roots:
-            path = os.path.join(root, name)
-            if os.path.isfile(path):
-                runtime_files.append(path)
-                break
-        else:
-            print("warning: VC runtime {} not found; GUI may fail".format(name))
-
-    for path in runtime_files:
-        includefiles.append((path, "lib"))
-        includefiles.append((path, "lib/PyQt5/Qt5/bin"))
     excludes = ["tkinter"]
     includes = ['PyQt5.QtWidgets', 'PyQt5.QtGui', 'PyQt5.Qt', 'PyQt5', 'PyQt5.QtCore', 'PyQt5.QtWebEngineWidgets']
 

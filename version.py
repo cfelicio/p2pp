@@ -189,13 +189,14 @@ releaseinfo = {
     "10.2.3": "PrusaSlicer 2.8/2.9 config parsing fix and portable Windows ZIP release",
     "10.2.4": "Bundle generated Qt resource module in GUI and portable builds",
     "10.2.5": "Bundle Microsoft VC++ runtime for self-contained Qt GUI builds",
+    "10.2.6": "Copy VC++ runtime DLLs into the cx_Freeze bundle before packaging",
     '--- RELEASE INFORMATION': 'END'
 }
 
 # general version info
 MajorVersion = 10
 MinorVersion = 2
-Build = 5
+Build = 6
 
 Version = "{}.{:02}.{:02}".format(MajorVersion, MinorVersion, Build)
 
