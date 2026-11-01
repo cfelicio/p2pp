@@ -29,8 +29,6 @@ jobs:
         run: python3 tests/test_lint_gcode.py
       - name: Run Palette 3 simulator unit tests
         run: python3 tests/test_p3_simulator.py
-      - name: Run PrusaSlicer 2.8/2.9 config parser regression test
-        run: python3 tests/test_psconfig_29.py
 
   # Fast pipeline: slice → p2pp → lint (no P3 firmware, ~2 min)
   e2e-slice:
@@ -53,6 +51,9 @@ jobs:
             libxcb-icccm4 libxcb-keysyms1 libxcb-render-util0 libxcb-xinerama0
           python3 -m pip install --upgrade pip
           pip install -r requirements-common.txt -r requirements-linux.txt
+
+      - name: Run PrusaSlicer 2.8/2.9 config parser regression test
+        run: python3 tests/test_psconfig_29.py
 
       - name: Cache Flatpak installation
         uses: actions/cache@v4
