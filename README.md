@@ -30,12 +30,22 @@ in [`profiles/`](profiles/README.md).
 
 Every Windows release includes a portable ZIP as well as the MSI installer:
 
-- `P2PP-v10.2.3-windows-portable.zip` — extract it and run `P2PP.exe`.
+- `P2PP-v10.2.4-windows-portable.zip` — extract it and run `P2PP.exe`.
 - The portable build bundles Python, PyQt, and the application files; it does not
   install a system Python or change a system Qt installation.
 - Use the MSI if you want Start Menu integration and normal uninstall support.
 - Use the portable ZIP if you want to test or run P2PP alongside an existing
   PrusaSlicer/Python setup without mixing dependencies.
+
+If you run P2PP from a fresh source checkout, generate the Qt resource module
+before launching the GUI:
+
+```bash
+pyrcc5 -o image_rc.py image.qrc
+```
+
+The GitHub Actions packaging jobs do this automatically before building the GUI,
+MSI, DMG, and portable ZIP.
 
 ## PrusaSlicer 2.8/2.9 compatibility
 

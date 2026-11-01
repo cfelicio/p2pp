@@ -28,7 +28,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements-mac.txt
         brew install create-dmg
-        
+
+    - name: Generate Qt resource module
+      run: pyrcc5 -o image_rc.py image.qrc
+
     - name: Build Universal App
       run: |
         rm -rf build/ dist/
@@ -118,7 +121,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements-win.txt
-        
+
+    - name: Generate Qt resource module
+      run: pyrcc5 -o image_rc.py image.qrc
+
     - name: Build Windows Package
       run: |
         python setup.py bdist_msi
@@ -221,7 +227,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements-linux.txt
-        
+
+    - name: Generate Qt resource module
+      run: pyrcc5 -o image_rc.py image.qrc
+
     - name: Build Linux Packages
       run: |
         # Build RPM

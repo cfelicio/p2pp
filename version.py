@@ -187,13 +187,14 @@ releaseinfo = {
     "9.1.05": "issue with skipped layers in accessory mode",
     "10.0.0": "Create new packages and CI/CD system",
     "10.2.3": "PrusaSlicer 2.8/2.9 config parsing fix and portable Windows ZIP release",
+    "10.2.4": "Bundle generated Qt resource module in GUI and portable builds",
     '--- RELEASE INFORMATION': 'END'
 }
 
 # general version info
 MajorVersion = 10
 MinorVersion = 2
-Build = 3
+Build = 4
 
 Version = "{}.{:02}.{:02}".format(MajorVersion, MinorVersion, Build)
 
